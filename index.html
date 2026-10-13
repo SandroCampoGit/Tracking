@@ -100,6 +100,7 @@
   .note-input:focus{border-color:var(--text-3)}
   .alt-note{font-size:11px;color:var(--text-3);margin-top:8px;margin-bottom:2px}
 
+  /* HISTORY PAGE */
   .hist-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:13px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between}
   .hist-card-left{display:flex;align-items:center;gap:8px}
   .hist-card-date{font-size:15px;font-weight:600;color:var(--text)}
@@ -107,6 +108,13 @@
   .hist-vol{font-size:14px;font-weight:500;color:var(--text)}
   .hist-sets{font-size:11px;color:var(--text-3);margin-top:1px}
   .empty{text-align:center;color:var(--text-3);font-size:14px;margin-top:60px;line-height:2}
+
+  /* EXPORT SECTION */
+  .export-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-top:16px}
+  .export-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
+  .export-sub{font-size:12px;color:var(--text-3);margin-bottom:12px;line-height:1.5}
+  .export-btn{width:100%;padding:12px;border-radius:10px;border:1px solid var(--push-border);background:var(--blue-light);color:var(--blue);font-size:14px;font-weight:600;cursor:pointer;-webkit-appearance:none}
+  .export-btn:active{opacity:.7}
 
   .toast{position:fixed;bottom:calc(env(safe-area-inset-bottom,0) + 24px);left:50%;transform:translateX(-50%) translateY(20px);background:#111;color:#fff;padding:10px 20px;border-radius:var(--radius-pill);font-size:14px;font-weight:500;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;z-index:999;white-space:nowrap}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -131,57 +139,71 @@
 <script>
 const DAYS = {
   push: {
-    label: 'Push',
-    muscles: 'Chest · Shoulders · Triceps',
-    exercises: [
-      {id:'incline_bench',    name:'Incline bench press',         sets:4},
-      {id:'flat_db_press',    name:'Flat dumbbell press',         sets:4},
-      {id:'cable_chest_fly',  name:'Cable chest fly',             sets:3},
-      {id:'pec_dec',          name:'Machine pec dec',             sets:3},
-      {id:'seated_db_press',  name:'Seated DB shoulder press',    sets:4},
-      {id:'lateral',          name:'Lateral raise',               sets:4},
-      {id:'cable_lateral',    name:'Cable lateral raise',         sets:3},
-      {id:'dips',             name:'Weighted dips',               sets:3},
-      {id:'oh_tri',           name:'OH cable triceps ext.',       sets:3},
-      {id:'skull_crushers',   name:'Skull crushers',              sets:3},
+    label:'Push',
+    muscles:'Chest · Shoulders · Triceps',
+    exercises:[
+      {id:'incline_bench',   name:'Incline bench press',       sets:4},
+      {id:'flat_db_press',   name:'Flat dumbbell press',       sets:4},
+      {id:'cable_chest_fly', name:'Cable chest fly',           sets:3},
+      {id:'pec_dec',         name:'Machine pec dec',           sets:3},
+      {id:'seated_db_press', name:'Seated DB shoulder press',  sets:4},
+      {id:'lateral',         name:'Lateral raise',             sets:4},
+      {id:'cable_lateral',   name:'Cable lateral raise',       sets:3},
+      {id:'dips',            name:'Weighted dips',             sets:3},
+      {id:'oh_tri',          name:'OH cable triceps ext.',     sets:3},
+      {id:'skull_crushers',  name:'Skull crushers',            sets:3},
     ]
   },
   pull: {
-    label: 'Pull',
-    muscles: 'Back · Biceps · Traps',
-    exercises: [
-      {id:'tbar',             name:'T-bar row',                   sets:4},
-      {id:'seated_cable_row', name:'Seated cable row',            sets:4},
-      {id:'lat_pulldown',     name:'Lat pulldown',                sets:4},
-      {id:'pullup',           name:'Pull up',                     sets:3},
-      {id:'rev_fly',          name:'Bent-over reverse fly',       sets:3, note:'Alternative to reverse pec dec'},
-      {id:'bayesian',         name:'Bayesian cable curl',         sets:3},
-      {id:'preacher',         name:'Preacher curl',               sets:3},
-      {id:'shrug',            name:'Dumbbell shrugs',             sets:3},
+    label:'Pull',
+    muscles:'Back · Biceps · Traps',
+    exercises:[
+      {id:'tbar',            name:'T-bar row',                 sets:4},
+      {id:'seated_cable_row',name:'Seated cable row',          sets:4},
+      {id:'lat_pulldown',    name:'Lat pulldown',              sets:4},
+      {id:'pullup',          name:'Pull up',                   sets:3},
+      {id:'rev_fly',         name:'Bent-over reverse fly',     sets:3, note:'Alternative to reverse pec dec'},
+      {id:'bayesian',        name:'Bayesian cable curl',       sets:3},
+      {id:'preacher',        name:'Preacher curl',             sets:3},
+      {id:'shrug',           name:'Dumbbell shrugs',           sets:3},
     ]
   },
   legs: {
-    label: 'Legs + Abs',
-    muscles: 'Legs (light) · Abs',
-    exercises: [
-      {id:'squat',            name:'Squat',                       sets:3},
-      {id:'lunge',            name:'Walking lunge',               sets:3},
-      {id:'rdl',              name:'Romanian deadlift',           sets:3},
-      {id:'glute',            name:'Nautilus glute drive',        sets:3},
-      {id:'calf',             name:'Standing calf raise',         sets:3},
-      {id:'cable_crunch',     name:'Cable crunch',                sets:3},
-      {id:'hanging_knee',     name:'Hanging knee raise',          sets:3},
-      {id:'plank',            name:'Plank',                       sets:3, note:'Log time in seconds as reps'},
+    label:'Legs + Abs',
+    muscles:'Legs (light) · Abs',
+    exercises:[
+      {id:'squat',           name:'Squat',                     sets:3},
+      {id:'lunge',           name:'Walking lunge',             sets:3},
+      {id:'rdl',             name:'Romanian deadlift',         sets:3},
+      {id:'glute',           name:'Nautilus glute drive',      sets:3},
+      {id:'calf',            name:'Standing calf raise',       sets:3},
+      {id:'cable_crunch',    name:'Cable crunch',              sets:3},
+      {id:'hanging_knee',    name:'Hanging knee raise',        sets:3},
+      {id:'plank',           name:'Plank',                     sets:3, note:'Log time in seconds as reps'},
     ]
   }
 };
 
-const KEY = 'pp_tracker_v3';
-let currentDay = 'push';
-let state = {push:{},pull:{},legs:{},history:[]};
+const KEY='pp_tracker_v3';
+let currentDay='push';
+let state={push:{},pull:{},legs:{},history:[]};
 
 function loadState(){
   try{ const d=localStorage.getItem(KEY); if(d) state=JSON.parse(d); }catch(e){}
+  // Migrate history from older keys so data is never lost on update
+  const OLD_KEYS=['pp_tracker_v2','pp_tracker_v1','pp_tracker'];
+  OLD_KEYS.forEach(oldKey=>{
+    try{
+      const old=localStorage.getItem(oldKey);
+      if(!old) return;
+      const oldState=JSON.parse(old);
+      if(oldState.history&&oldState.history.length){
+        const existingDates=new Set((state.history||[]).map(h=>h.date+'|'+h.day));
+        oldState.history.forEach(h=>{ if(!existingDates.has(h.date+'|'+h.day)) state.history.push(h); });
+        state.history.sort((a,b)=>new Date(a.date)-new Date(b.date));
+      }
+    }catch(e){}
+  });
   ['push','pull','legs'].forEach(day=>{
     if(!state[day]) state[day]={};
     DAYS[day].exercises.forEach(ex=>{
@@ -190,9 +212,9 @@ function loadState(){
   });
   if(!state.history) state.history=[];
 }
-
 function saveState(){ try{ localStorage.setItem(KEY,JSON.stringify(state)); }catch(e){} }
 function mkSets(n){ return Array.from({length:n},()=>({kg:'',reps:'',done:false})); }
+function parseNum(v){ return parseFloat(String(v).replace(',','.')); }
 
 function switchDay(day){
   currentDay=day;
@@ -214,7 +236,7 @@ function render(){
   exercises.forEach(ex=>{
     exState[ex.id].sets.forEach(s=>{
       totalSets++;
-      if(s.kg&&s.reps){doneSets++;vol+=parseFloat(s.kg)*parseInt(s.reps);}
+      if(s.kg&&s.reps){doneSets++;vol+=parseNum(s.kg)*parseNum(s.reps);}
     });
   });
 
@@ -255,8 +277,8 @@ function render(){
         ${d.sets.map((s,i)=>`
           <div class="set-row" id="setrow-${ex.id}-${i}">
             <span class="set-num">${i+1}</span>
-            <input class="set-input${s.done?' done':''}" type="number" inputmode="decimal" placeholder="—" value="${s.kg}" onchange="updateSet('${ex.id}',${i},'kg',this.value)"/>
-            <input class="set-input${s.done?' done':''}" type="number" inputmode="numeric" placeholder="—" value="${s.reps}" onchange="updateSet('${ex.id}',${i},'reps',this.value)"/>
+            <input class="set-input${s.done?' done':''}" type="text" inputmode="decimal" placeholder="—" value="${s.kg}" onchange="updateSet('${ex.id}',${i},'kg',this.value)"/>
+            <input class="set-input${s.done?' done':''}" type="text" inputmode="numeric" placeholder="—" value="${s.reps}" onchange="updateSet('${ex.id}',${i},'reps',this.value)"/>
             <button class="done-btn${s.done?' logged':''}" onclick="toggleDone('${ex.id}',${i})">${s.done?'✓':'Log'}</button>
           </div>
         `).join('')}
@@ -270,21 +292,19 @@ function render(){
     </div>`;
   });
 
-  // bodyweight block
-  const lastBW = state.history.slice().reverse().find(h=>h.bodyweight&&parseFloat(h.bodyweight)>0);
+  // Body weight block
+  const lastBW=state.history.slice().reverse().find(h=>h.bodyweight&&parseFloat(h.bodyweight)>0);
   html+=`
     <div class="ex-card" style="margin-top:16px">
       <div class="ex-header" onclick="toggleEx('bw-block')">
         <div class="ex-left"><span class="ex-name">Body weight</span></div>
-        <div class="ex-right">
-          <span class="chevron" id="chev-bw-block">⌄</span>
-        </div>
+        <div class="ex-right"><span class="chevron" id="chev-bw-block">⌄</span></div>
       </div>
       <div class="ex-body" id="body-bw-block">
         ${lastBW?`<div class="last-hint"><strong>Last:</strong> ${lastBW.date} — ${lastBW.bodyweight} kg</div>`:'<div class="last-hint" style="color:var(--text-3)">No weight logged yet.</div>'}
         <div style="display:flex;align-items:center;gap:10px;margin-top:4px">
-          <input id="bw-input" class="set-input" type="number" inputmode="decimal" placeholder="kg" style="max-width:120px;font-size:16px;padding:10px"/>
-          <span style="font-size:13px;color:var(--text-3)">kg — logged on save</span>
+          <input id="bw-input" class="set-input" type="text" inputmode="decimal" placeholder="kg" style="max-width:120px;font-size:16px;padding:10px"/>
+          <span style="font-size:13px;color:var(--text-3)">saved with session</span>
         </div>
         <div style="margin-top:12px">
           <div style="font-size:10px;font-weight:700;color:var(--text-4);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px">Weight history</div>
@@ -341,14 +361,8 @@ function addSet(exId){
   },10);
 }
 
-function updateNote(exId,val){
-  state[currentDay][exId].note=val;
-  saveState();
-}
-
-function toggleHist(exId){
-  document.getElementById('hist-'+exId).classList.toggle('open');
-}
+function updateNote(exId,val){ state[currentDay][exId].note=val; saveState(); }
+function toggleHist(exId){ document.getElementById('hist-'+exId).classList.toggle('open'); }
 
 function getLastSession(exId){
   for(let i=state.history.length-1;i>=0;i--){
@@ -367,7 +381,7 @@ function buildHistPanel(exId){
   return entries.map(h=>{
     const d=h.exercises[exId];
     const valid=d.sets.filter(s=>s.kg&&s.reps);
-    const best=Math.max(...valid.map(s=>parseFloat(s.kg)));
+    const best=Math.max(...valid.map(s=>parseNum(s.kg)));
     return `<div class="hist-entry"><strong>${h.date}</strong> — top ${best}kg · ${valid.map(s=>`${s.kg}×${s.reps}`).join(', ')}</div>`;
   }).join('');
 }
@@ -379,7 +393,7 @@ function refreshStats(){
   exercises.forEach(ex=>{
     exState[ex.id].sets.forEach(s=>{
       totalSets++;
-      if(s.kg&&s.reps){doneSets++;vol+=parseFloat(s.kg)*parseInt(s.reps);}
+      if(s.kg&&s.reps){doneSets++;vol+=parseNum(s.kg)*parseNum(s.reps);}
     });
   });
   const cards=document.querySelectorAll('.stat-val');
@@ -393,7 +407,6 @@ function saveSession(){
   const date=new Date().toLocaleDateString('en-ZA',{day:'2-digit',month:'short',year:'numeric'});
   const entry={date,day:currentDay,exercises:{}};
   exercises.forEach(ex=>{ entry.exercises[ex.id]=JSON.parse(JSON.stringify(exState[ex.id])); });
-  // save bodyweight
   const bwInput=document.getElementById('bw-input');
   entry.bodyweight=bwInput?bwInput.value:'';
   state.history.push(entry);
@@ -406,22 +419,37 @@ function saveSession(){
 }
 
 function renderHistory(c){
+  let html='';
+
+  // Export box at the top of history
+  html+=`
+    <div class="export-box">
+      <div class="export-title">Export your data</div>
+      <div class="export-sub">Copy all your workout history to clipboard, then paste it into Claude to get a full progress analysis.</div>
+      <button class="export-btn" onclick="exportData()">Copy data to clipboard</button>
+    </div>
+    <div style="height:16px"></div>
+    <div style="font-size:10px;font-weight:700;color:var(--text-4);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px">Session history</div>
+  `;
+
   if(!state.history.length){
-    c.innerHTML='<div class="empty">No sessions saved yet.<br>Complete a workout and tap Save session.</div>';
+    html+='<div class="empty">No sessions saved yet.<br>Complete a workout and tap Save session.</div>';
+    c.innerHTML=html;
     return;
   }
-  let html='<div style="font-size:10px;font-weight:700;color:var(--text-4);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px">Session history</div>';
+
   state.history.slice().reverse().forEach(h=>{
     const dayData=DAYS[h.day];
     if(!dayData) return;
     let vol=0,sets=0;
     dayData.exercises.forEach(ex=>{
-      (h.exercises[ex.id]?.sets||[]).forEach(s=>{ if(s.kg&&s.reps){vol+=parseFloat(s.kg)*parseInt(s.reps);sets++;} });
+      (h.exercises[ex.id]?.sets||[]).forEach(s=>{ if(s.kg&&s.reps){vol+=parseNum(s.kg)*parseNum(s.reps);sets++;} });
     });
     html+=`<div class="hist-card">
       <div class="hist-card-left">
         <span class="hist-card-date">${h.date}</span>
         <span class="tag tag-${h.day}">${dayData.label}</span>
+        ${h.bodyweight?`<span style="font-size:11px;color:var(--text-3)">${h.bodyweight}kg</span>`:''}
       </div>
       <div class="hist-card-right">
         <div class="hist-vol">${Math.round(vol).toLocaleString()} kg</div>
@@ -429,14 +457,38 @@ function renderHistory(c){
       </div>
     </div>`;
   });
+
   c.innerHTML=html;
+}
+
+function exportData(){
+  try{
+    const data=localStorage.getItem(KEY)||'{}';
+    navigator.clipboard.writeText(data).then(()=>{
+      showToast('Copied! Paste into Claude.');
+    }).catch(()=>{
+      // Fallback for older iOS
+      const ta=document.createElement('textarea');
+      ta.value=data;
+      ta.style.position='fixed';
+      ta.style.opacity='0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('Copied! Paste into Claude.');
+    });
+  }catch(e){
+    showToast('Could not copy — try again');
+  }
 }
 
 function showToast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;
   t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2200);
+  setTimeout(()=>t.classList.remove('show'),2500);
 }
 
 if('serviceWorker' in navigator){
